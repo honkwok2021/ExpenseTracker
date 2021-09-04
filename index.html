@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="ExpenseTracker.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <label name="expense">Expense: </label>
+        <input id="inputField" name="expense" type="text">
+        <label name="date">Date: </label>
+        <input id="start" type="text" name="date">
+        <label name="amount">Amount: </label>
+        <input id="money" name="amount" type="number" min="0" step="0.1">
+        <button id="add" >Add</button>
+        <table>
+            <thead>
+                <tr style="border: 1px solid black;">
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="listContainer" style="border: 1px solid black;">
+                
+            </tbody>
+            <tr>
+                <td id="total">Total</td>
+            </tr>
+        </table>
+        
+        <button hidden id="clear" onclick="clearHistory()">clear localStorage</button>
+    </div>
+
+
+
+    
+    <script>
+        class ExpenseObject{
+        
+        constructor(e, d, a){
+          
+          this.expenseDescription = e;
+          this.dateObject = d;
+          this.amount = a;
+        }
+      }
+        function clearHistory(){
+            localStorage.clear();
+        }
+        const createDate = flatpickr("#start",{
+            dateFormat:"d-m-Y ",
+        });
+
+        let addButton = document.getElementById("add");
+        let listContainer=document.getElementById("listContainer");
+        let inputField= document.getElementById("inputField");
+        let dateInput = document.getElementById("start");
+        let amountField = document.getElementById("money");
+        let total = document.getElementById("total");
+        let totalAmount = parseFloat(total.innerText) || 0;
+        
+
+        addButton.addEventListener('click', function(){
+            if(!inputField.value || !dateInput.value || !amountField.value){
+                alert("please do not leave blank in any field");
+                return;
+            }
+
+            var newRow = document.createElement('tr');
+            var expense = document.createElement('td');
+            var expenseDate = document.createElement('td');
+            var expenseAmount = document.createElement('td');
+            var deleteButton = document.createElement('button');
+        
+            
+            deleteButton.innerHTML="X";
+
+            let expenseStuff = new ExpenseObject (inputField.value,dateInput.value,amountField.value )
+           
+            expense.innerHTML = expenseStuff.expenseDescription; 
+            expenseDate.innerHTML =  expenseStuff.dateObject;
+            expenseAmount.innerText = expenseStuff.amount;
+            listContainer.appendChild(newRow);
+            newRow.appendChild(expense);
+            newRow.appendChild(expenseDate);
+            newRow.appendChild(expenseAmount);
+            newRow.appendChild(deleteButton);
+           
+            
+            inputField.value = "";
+            amountField.value="";
+            
+            
+            
+            totalAmount += parseFloat(expenseAmount.innerHTML);
+            total.innerHTML ="Total: "+ totalAmount;
+           
+            
+            deleteButton.addEventListener('click', function(){
+                newRow.removeChild(expense);
+                newRow.removeChild(expenseDate);
+                newRow.removeChild(expenseAmount);
+                newRow.removeChild(deleteButton);
+                totalAmount -= parseFloat(expenseAmount.innerHTML);
+                total.innerHTML ="Total: "+ totalAmount;
+            })
+        })
+
+    </script>
+</body>
+</html>
