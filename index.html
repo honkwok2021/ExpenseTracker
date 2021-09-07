@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
     
     <title>Document</title>
 </head>
@@ -36,7 +37,8 @@
             </tr>
         </table>
         
-        <button hidden id="clear" onclick="clearHistory()">clear localStorage</button>
+        
+        <button id="export" onclick="exportReportToExcel()">Export</button>
     </div>
 
 
@@ -113,6 +115,16 @@
                 total.innerHTML ="Total: "+ totalAmount;
             })
         })
+
+        function exportReportToExcel() {
+            let table = document.getElementsByTagName("table"); 
+            TableToExcel.convert(table[0], { 
+                name: `export.xlsx`, 
+                sheet: {
+                name: 'Sheet 1' 
+                }
+            });
+        }
 
     </script>
 </body>
